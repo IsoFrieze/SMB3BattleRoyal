@@ -5,7 +5,7 @@
 ;========================
 
 incsrc "definitions.asm"
-incsrc "NMI.asm"
+incsrc "codes.asm"
 
 ; start with smb3 menu
 ORG $009BC0
@@ -28,15 +28,29 @@ ORG $20B8E4
 		LDA #$03
 		STA $072B
 		NOP
+		
+; freespace
+ORG $20FF78
+jsl_controller:
+		JSL update_controllers
+		RTS
 
 ; hijacks
-ORG $20F000
-		JSL _NMI
+ORG $20F65C
+		JSL dma_player_graphics
+		JMP $F703
+ORG $20F0B0
+	;	JSR jsl_controller ; temp disable
+ORG $25F8CE
+		PHB
+		PHK
+		PLB
+		JSL load_player_pose
+		PLB
 		RTL
-
-ORG $20F304
-		JSL _IRQ
-		RTL
+ORG $26D800
+		JSL draw_players
+		RTS
 
 ORG $20A2D0
 	;	JSL _ENTRY
