@@ -29,11 +29,24 @@ ORG $20B8E4
 		STA $072B
 		NOP
 		
+; clear out more memory
+ORG $26CC2D
+		LDY #$0300
+		LDA #$0000
+		STA $1700,Y
+		
 ; freespace
 ORG $20FF78
 jsl_controller:
 		JSL update_controllers
 		RTS
+		
+; graphics
+ORG $35E000
+		incbin "scoreboard_tiles.bin"
+; map16
+ORG $219C79
+		incbin "scoreboard_map16.bin"
 
 ; hijacks
 ORG $20F65C
@@ -50,6 +63,23 @@ ORG $25F8CE
 		RTL
 ORG $26D800
 		JSL draw_players
+		RTS
+ORG $20A346
+		JSL load_level
+ORG $20A3CE
+		JSL clear_scoreboards
+		JMP $A420
+ORG $20A39C
+		JSL tally_point
+		JMP $A3BA
+ORG $26CBB8
+		JSL load_all_players_byetudlr
+ORG $26CC75
+		JSL make_all_players_big
+		LDA #$01
+		NOP #2
+ORG $26F688
+		JSL flash_scoreboard
 		RTS
 
 ORG $20A2D0

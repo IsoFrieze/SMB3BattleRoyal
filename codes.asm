@@ -249,3 +249,189 @@ draw_players:
 		
 	.done:
 		RTL
+
+load_level:
+		PHB
+		PHK
+		PLB
+		PHP
+		
+		REP #$10
+		LDX #$00EF
+	.loop_level:
+		LDA custom_level,X
+		STA $7E2000,X
+		DEX
+		BPL .loop_level
+		
+		LDX #$0009
+	.loop_scoreboard:
+		LDA scoreboard,X
+		STA $7E2003,X
+		LDA scoreboard+$0A,X
+		STA $7E2013,X
+		DEX
+		BPL .loop_scoreboard
+		
+		PLP
+		PLB
+		RTL
+		
+scoreboard:
+		db $20,$21,$22,$23,$24,$25,$26,$27,$28,$29
+		db $40,$41,$42,$43,$44,$45,$46,$47,$48,$49
+normal_level:
+		db $02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02
+		db $81,$80,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$80,$81
+		db $83,$82,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$82,$83
+		db $C1,$C1,$C1,$C1,$C1,$C1,$02,$02,$02,$02,$C1,$C1,$C1,$C1,$C1,$C1
+		db $02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02
+		db $02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02
+		db $02,$02,$02,$02,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$02,$02,$02,$02
+		db $C1,$C1,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$C1,$C1
+		db $02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02
+		db $02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02
+		db $C1,$C1,$C1,$C1,$C1,$C1,$02,$02,$02,$02,$C1,$C1,$C1,$C1,$C1,$C1
+		db $81,$80,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$80,$81
+		db $83,$82,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$82,$83
+		db $50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50
+		db $50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50
+custom_level:
+		db $02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02
+		db $81,$80,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$80,$81
+		db $83,$82,$02,$02,$02,$02,$02,$C1,$C1,$02,$02,$02,$02,$02,$82,$83
+		db $C1,$C1,$C1,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$C1,$C1,$C1
+		db $02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02
+		db $02,$02,$02,$C1,$C1,$C1,$C1,$02,$02,$C1,$C1,$C1,$C1,$02,$02,$02
+		db $02,$02,$02,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$02,$02,$02
+		db $02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02
+		db $C1,$C1,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$C1,$C1
+		db $02,$02,$02,$02,$02,$02,$C1,$C1,$C1,$C1,$02,$02,$02,$02,$02,$02
+		db $02,$02,$02,$02,$02,$C1,$C1,$02,$02,$C1,$C1,$02,$02,$02,$02,$02
+		db $C1,$C1,$C1,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$C1,$C1,$C1
+		db $81,$80,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$80,$81
+		db $83,$82,$02,$02,$02,$02,$02,$50,$50,$02,$02,$02,$02,$02,$82,$83
+		db $50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50,$50
+		
+clear_scoreboards:
+		PHP
+		
+		REP #$20
+		LDA #$4900
+		STA $1602
+		LDA #$4E00
+		STA $1608
+		LDA #$5300
+		STA $160E
+		LDA #$5800
+		STA $1614
+		LDA #$0100
+		STA $1604
+		STA $160A
+		STA $1610
+		STA $1616
+		LDA #$191A
+		STA $1606
+		LDA #$1D1A
+		STA $160C
+		LDA #$192A
+		STA $1612
+		LDA #$193A
+		STA $1618
+		
+		LDA #$FFFF
+		STA $161A
+		
+		PLP
+		RTL
+
+tally_point:
+		LDA !winner_of_game
+		DEC A
+				EOR #$01 ; remove this when !winner_of_game is updated
+		TAX
+		LDA #$01
+		STA $1203
+		INC !number_won_games,X
+		LDA !number_won_games,X
+		CMP #$05
+		BCC .done
+		INC !number_won_matches,X
+		LDA #$05
+		STA $1203
+	.done:
+		RTL
+
+load_all_players_byetudlr:
+		LDA !controller_byetudlr_frame
+		ORA !controller_byetudlr_frame+1
+		ORA !controller_byetudlr_frame+2
+		ORA !controller_byetudlr_frame+3
+		RTL
+		
+load_all_players_axlr:
+		LDA !controller_axlr_frame
+		ORA !controller_axlr_frame+1
+		ORA !controller_axlr_frame+2
+		ORA !controller_axlr_frame+3
+		RTL
+		
+make_all_players_big:
+		LDA #$01
+		STA !player_size
+		STA !player_size+1
+		STA !player_size+2
+		STA !player_size+3
+		RTL
+
+flash_scoreboard:
+		PHB
+		PHK
+		PLB
+		
+		LDA $078C
+	;	DEC A ; temp
+	;	AND #$03
+				AND #$01
+		TAX
+		LDA !player_coin_count,X
+		CMP #$05
+		BNE .done
+		LDA $2143
+		BNE .no_sound
+		LDA #$05
+		STA $1203
+	.no_sound:
+		LDA $15
+		AND #$04
+		BEQ .erase_tile
+	.draw_tile:
+		LDA number_5_properties,X
+		STA $1607
+		LDA number_5_tiles,X
+		BRA .merge
+	.erase_tile:
+		LDA #$10
+		STA $1607
+		LDA #$FF
+	.merge:
+		STA $1606
+		LDA #$FF
+		STA $1608
+		STZ $1602
+		LDA number_5_locations,X
+		STA $1603
+		STZ $1604
+		LDA #$01
+		STA $1605
+		
+	.done:
+		PLB
+		RTL
+
+number_5_locations:
+		db $49,$4E,$53,$58
+number_5_tiles:
+		db $1F,$1F,$2F,$3F
+number_5_properties:
+		db $19,$1D,$19,$19

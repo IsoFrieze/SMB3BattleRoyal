@@ -14,8 +14,27 @@ $0036 - long pointer to stripe image
 $0075 - 0 = init game, 1 = run like normal
 $0076 - pause flag
 
+$0200 - w12sel
+$0201 - w34sel
+$0202 - wobjsel
+$0203 - cgwsel
+$0204 - cgadsub
+$0205 - coldata (red)
+$0206 - coldata (green)
+$0207 - coldata (blue)
+$0208 - tm
+$0209 - ts
+$020A - tmw
+$020B - tsw
+$020C - bgmode
+$020D - mosaic
+
+$0210 [2 bytes] - layer 1 x pos
 $0212 [2 bytes] - layer 2 x pos
+$0214 [2 bytes] - layer 3 x pos
+$0216 [2 bytes] - layer 1 y pos
 $0218 [2 bytes] - layer 2 y pos
+$021A [2 bytes] - layer 3 y pos
 
 $02DA,X [2 bytes] - player game win counter
 $02DE,X [2 bytes] - player match win counter
@@ -188,6 +207,3 @@ $26F62D - update a non-player sprite's y position
 $26F645 - update a sprite's x or y positions
 $26F679 - make winner's scoreboard flash
 $26F6EF - update the palette (args X and Y)
-
-
-020202020202020202020202020202028180020202020202020202020202808183820202020202C1C102020202028283C1C1C102020202020202020202C1C1C102020202020202020202020202020202020202C1C1C1C10202C1C1C1C1020202020202C1C1C1C1C1C1C1C1C1C102020202020202020202020202020202020202C1C1020202020202020202020202C1C1020202020202C1C1C1C10202020202020202020202C1C10202C1C10202020202C1C1C102020202020202020202C1C1C1818002020202020202020202020280818382020202020250500202020202828350505050505050505050505050505050
