@@ -1,0 +1,193 @@
+mario 4bbp vram w$6000
+luigi 4bbp vram w$6100
+
+mario oam w$78
+luigi oam w$88
+mario2 oam w$98
+luigi2 oam w$A8
+
+$0427 - game mode
+
+
+$0036 - long pointer to stripe image
+
+$0075 - 0 = init game, 1 = run like normal
+$0076 - pause flag
+
+$0212 [2 bytes] - layer 2 x pos
+$0218 [2 bytes] - layer 2 y pos
+
+$02DA,X [2 bytes] - player game win counter
+$02DE,X [2 bytes] - player match win counter
+
+$078C - who won the game (2 = mario, 1 = luigi)
+$0800 - oam mirror
+
+$1200,X [4 bytes] - cpu -> apu (play sounds and music)
+$1204,X [4 bytes] - backup of $1200 to see what was played last
+$120A,X [4 bytes] - apu -> cpu (check if music/sounds are playing)
+$1300,X [512 bytes] - the entire palette
+
+$1602 [2 bytes] - index into below table
+$1604,X [32+ bytes] - stripe table image
+
+
+$18B3,X [2 bytes] - player kicking timer
+$18B5,X [2 bytes] - player squished timer
+$18B7,X [2 bytes] - player frozen vertically timer
+
+
+$1800,X [17 bytes] - sprite status table
+	for player (slot 0 and 1):
+		0 - gone
+		1 - alive
+		2 - dead
+		3 - climbing
+	for non-player (slots 2-14):
+		0 - gone
+		1 - normal
+		2 - flipped
+		3 - dead
+		4 - kicked shell
+	for bouncing block (slot 15 and 16):
+		0 - gone
+		1:D - bouncing
+$1811,X [17 bytes] - sprite y pos low byte
+$1822,X [17 bytes] - sprite x pos low byte
+$1833,X [17 bytes] - sprite y speed
+$1844,X [17 bytes] - sprite x speed
+$1855,X [17 bytes] - sprite animation timer
+$1866,X [13 bytes] - sprite horizontal direction
+	1 - left
+	2 - right
+$1873,X [17 bytes] - sprite y speed subpixel
+$1884,X [17 bytes] - sprite x speed subpixel
+$1895,X [17 bytes] - sprite direction interaction
+	???? cf??
+		c = ceiling
+		f = floor
+		
+$18BA - POW timer	
+		
+$18BB,X [13 bytes] - sprite id (minus players)
+	0 - spiny
+	1 - invisible spiny?
+	2 - crab
+	3 - fly
+	4,5,6 - fireball
+	7,8,9 - boo
+	A - koopa
+	B - glitchy coin?
+	C - mushroom level card
+	D - flower level card
+	E - star level card
+	F - brown block
+	10 - super mushroom
+	11 - red ? mushroom
+	12 - green ? mushroom
+	13 - coin
+$18CA - enemy spawn count	
+$18CB,X [15 bytes] - sprite lock timer
+$18DA,X [15 bytes] - sprite misc timer (turning around)
+$18E9,X [15 bytes] - sprite stun timer
+$18F8,X [15 bytes] - sprite table; what type of block its standing on
+$1908,X [2 bytes] - location of block that was hit
+	yyyy xxxx
+		y = y pos of tile
+		x = x pos of tile
+$190E - used to save index into tables when iterating through them
+$1911,X [13 bytes] - sprite table
+	p??? ??e?
+		p = entering/exiting pipe
+		e = sprite exists
+$191E,X [13 bytes] - sprite enter/exit pipe timer
+
+$192B,X [2 bytes] - RNG seeds
+$192D - RNG output
+$192E,X [2 bytes] - player coin count
+$1930 - timer that is set when the game is over, goes to results at 0
+$193E - number of times the POW block has been hit
+
+$1942,X [15 bytes] - sprite y pos high byte
+$1962,X [15 bytes] - sprite vertical direction
+	4 - down
+	8 - up
+$197C,X [15 bytes] - another sprite frozen table???
+$198B,X [15 bytes] - backup of $18CB, for when game is paused
+
+$199A - index to tell which enemies to spawn
+$19AB,X [2 bytes] - player size
+$19AF,X [2 bytes] - player hurt timer
+$19B3,X [2 bytes] - player flashing timer
+$19BC - number of enemies killed this round
+$19C0 - timer for swapping player positions
+$19D7,X [8 bytes] - animation timer for particles
+$19E0,X [8 bytes] - animation frame for particles
+$19E9,X [8 bytes] - particle id
+	0 - skid smoke
+	1 - yellow bump star
+
+$1A28 - set to FF for intro screen
+$1A2F,X [4 bytes] - indices into sprite lists
+$1A35 - timer that respawns POW block, set to #$18 and ticks down
+$1A36,X [2 bytes] - timers that determine if the POW should respawn
+$1A38 - which coin tile is missing when scoreboard flashes
+$1A39 - timer to tell what palette to make scoreboard when it flashes
+$1A3A,X [4 bytes] - timers for spawning enemies
+$1A67 - index to which message to show "5 games to win!" / "round x"
+$1A68 - timer for how long to display "5 games to win!"
+$1A69 - current graphic to display "5 games to win!"
+$1A6A - timer for how long to display "round x"
+$1A6B - current graphic to display "round x"
+
+$1D9C,X [3 bytes] - mario's level cards
+$1DBF,X [3 bytes] - luigi's level cards
+
+$1F26 - current round number
+	
+	
+
+
+$7E2000 [240 bytes] - level layout
+$7F300C - cursor selection on results screen
+	0 - continue
+	2 - quit
+$7F4FFE [128 bytes] - horizontal tile offsets for barn door effect of results screen
+
+
+
+$0080DE - JML here to go back to SMAS title screen
+$20801F - Wait for VBlank routine
+$20804D - long wrapper for $20801F
+$20A2D0 - **** entry point for the entirety of battle mode, from the title screen
+$20A38C - battle mode main loop
+$20FB1F - ExecutePtr routine
+$20FB3A - ExecutePtrLong routine
+$20FB5E - controller update routine for all of smb3
+$22E0A9 - clears out oam by setting all object coords offscreen
+$22E103 - updates a 80-bit long rolling buffer
+$25F805 - ticks the RNG
+
+$26CAFC - prepare drawing player's level cards
+$26CBB0 - the actual main function for battle mode :O
+$26CC24 - Battle Mode init
+$26CD8E - Battle Mode tick
+$26E470 - clear a sprite's y speed as if it landed on the floor
+$26E47C - sprite hit from below or hit by POW
+$26E58C - draw a sprite
+$26E8A8 - flip a sprite's x speed
+$26ED2A - despawn a sprite
+$26ED4D - handle mostly everything to do with the POW block
+$26EE6B - respawn the POW block
+$26EF83 - handle everything to do with bouncing block sprites
+$26F22D - draw intro text
+$26F344 - draw "PAUSE" text
+$26F466 - draw object text to screen
+$26F627 - update a non-player sprite's x position
+$26F62D - update a non-player sprite's y position
+$26F645 - update a sprite's x or y positions
+$26F679 - make winner's scoreboard flash
+$26F6EF - update the palette (args X and Y)
+
+
+020202020202020202020202020202028180020202020202020202020202808183820202020202C1C102020202028283C1C1C102020202020202020202C1C1C102020202020202020202020202020202020202C1C1C1C10202C1C1C1C1020202020202C1C1C1C1C1C1C1C1C1C102020202020202020202020202020202020202C1C1020202020202020202020202C1C1020202020202C1C1C1C10202020202020202020202C1C10202C1C10202020202C1C1C102020202020202020202C1C1C1818002020202020202020202020280818382020202020250500202020202828350505050505050505050505050505050
