@@ -19,6 +19,9 @@
 !player_direction = $1864
 !player_size = $19AB
 !player_coin_count = $192E
+!player_death_timer_a = $18E7
+!player_death_timer_b = $1989
+!player_y_offset = $193F
 
 
 !player_tiles = $0240

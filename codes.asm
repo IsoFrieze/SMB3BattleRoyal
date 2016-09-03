@@ -301,10 +301,10 @@ custom_level:
 		db $81,$80,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$80,$81
 		db $83,$82,$02,$02,$02,$02,$02,$C1,$C1,$02,$02,$02,$02,$02,$82,$83
 		db $C1,$C1,$C1,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$C1,$C1,$C1
-		db $02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02
-		db $02,$02,$02,$C1,$C1,$C1,$C1,$02,$02,$C1,$C1,$C1,$C1,$02,$02,$02
-		db $02,$02,$02,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$02,$02,$02
-		db $02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02
+		db $02,$C0,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$C0,$02
+		db $02,$C0,$02,$C1,$C1,$C1,$C1,$02,$02,$C1,$C1,$C1,$C1,$02,$C0,$02
+		db $02,$C0,$02,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$C1,$02,$C0,$02
+		db $02,$C0,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$C0,$02
 		db $C1,$C1,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$02,$C1,$C1
 		db $02,$02,$02,$02,$02,$02,$C1,$C1,$C1,$C1,$02,$02,$02,$02,$02,$02
 		db $02,$02,$02,$02,$02,$C1,$C1,$02,$02,$C1,$C1,$02,$02,$02,$02,$02
@@ -435,3 +435,59 @@ number_5_tiles:
 		db $1F,$1F,$2F,$3F
 number_5_properties:
 		db $19,$1D,$19,$19
+		
+merge_controls:
+		LDX #$03
+	.loop:
+		LDA !controller_axlr_hold,X
+		AND #$C0
+		ORA !controller_byetudlr_hold,X
+		STA !controller_byetudlr_hold,X
+		LDA !controller_axlr_frame,X
+		AND #$C0
+		ORA !controller_byetudlr_frame,X
+		STA !controller_byetudlr_frame,X
+		
+	.check_lr:
+		LDA !controller_byetudlr_hold,X
+		AND #$03
+		CMP #$03
+		BNE .check_ud
+		LDA !controller_byetudlr_hold,X
+		AND #$FE
+		STA !controller_byetudlr_hold,X
+	.check_ud:
+		LDA !controller_byetudlr_hold,X
+		AND #$0C
+		CMP #$0C
+		BNE .continue
+		LDA !controller_byetudlr_hold,X
+		AND #$F7
+		STA !controller_byetudlr_hold,X
+	
+	.continue:
+		DEX
+		BPL .loop
+		RTL
+
+disable_controls:
+		LDX #$0F
+	.loop:
+		STZ !controller_axlr_hold,X
+		DEX
+		BPL .loop
+		RTL
+
+decrement_death_timers:
+		STZ !player_y_offset,X
+		LDA $76
+		BNE .done
+		LDA !player_death_timer_a,X
+		BEQ .check_b
+		DEC !player_death_timer_a,X
+	.check_b:
+		LDA !player_death_timer_b,X
+		BEQ .done
+		DEC !player_death_timer_b,X
+	.done:
+		RTL

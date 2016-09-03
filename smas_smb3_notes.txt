@@ -51,11 +51,6 @@ $1602 [2 bytes] - index into below table
 $1604,X [32+ bytes] - stripe table image
 
 
-$18B3,X [2 bytes] - player kicking timer
-$18B5,X [2 bytes] - player squished timer
-$18B7,X [2 bytes] - player frozen vertically timer
-
-
 $1800,X [17 bytes] - sprite status table
 	for player (slot 0 and 1):
 		0 - gone
@@ -75,8 +70,8 @@ $1811,X [17 bytes] - sprite y pos low byte
 $1822,X [17 bytes] - sprite x pos low byte
 $1833,X [17 bytes] - sprite y speed
 $1844,X [17 bytes] - sprite x speed
-$1855,X [17 bytes] - sprite animation timer
-$1866,X [13 bytes] - sprite horizontal direction
+$1855,X [15 bytes] - sprite animation timer
+$1864,X [15 bytes] - sprite horizontal direction facing
 	1 - left
 	2 - right
 $1873,X [17 bytes] - sprite y speed subpixel
@@ -85,7 +80,11 @@ $1895,X [17 bytes] - sprite direction interaction
 	???? cf??
 		c = ceiling
 		f = floor
-		
+
+$18B3,X [2 bytes] - player kicking timer
+$18B5,X [2 bytes] - player squished timer
+$18B7,X [2 bytes] - player frozen vertically timer
+$18B9 - disable player interaction timer
 $18BA - POW timer	
 		
 $18BB,X [13 bytes] - sprite id (minus players)
@@ -107,14 +106,17 @@ $18BB,X [13 bytes] - sprite id (minus players)
 	13 - coin
 $18CA - enemy spawn count	
 $18CB,X [15 bytes] - sprite lock timer
-$18DA,X [15 bytes] - sprite misc timer (turning around)
-$18E9,X [15 bytes] - sprite stun timer
+$18DA,X [13 bytes] - sprite misc timer (turning around)
+$18E7,X [2 bytes]
+$18E9,X [13 bytes] - sprite stun timer
+$18F6,X [2 bytes] - player jumped flag
 $18F8,X [15 bytes] - sprite table; what type of block its standing on
 $1908,X [2 bytes] - location of block that was hit
 	yyyy xxxx
 		y = y pos of tile
 		x = x pos of tile
 $190E - used to save index into tables when iterating through them
+$190F,X [2 bytes] - block that is directly above player's head
 $1911,X [13 bytes] - sprite table
 	p??? ??e?
 		p = entering/exiting pipe
@@ -124,8 +126,9 @@ $191E,X [13 bytes] - sprite enter/exit pipe timer
 $192B,X [2 bytes] - RNG seeds
 $192D - RNG output
 $192E,X [2 bytes] - player coin count
-$1930 - timer that is set when the game is over, goes to results at 0
+$1930 - timer that is set when the game is over, goes to results at 1
 $193E - number of times the POW block has been hit
+$193F,X [2 bytes] - player y offset (when standing on POW)
 
 $1942,X [15 bytes] - sprite y pos high byte
 $1962,X [15 bytes] - sprite vertical direction
@@ -135,14 +138,21 @@ $197C,X [15 bytes] - another sprite frozen table???
 $198B,X [15 bytes] - backup of $18CB, for when game is paused
 
 $199A - index to tell which enemies to spawn
+$199C,X [2 bytes] - player fractional bits for $199E,X
+$199E,X [2 bytes] - player walking frame
 $19AB,X [2 bytes] - player size
-$19AF,X [2 bytes] - player hurt timer
+$19AD,X [2 bytes] - player ducking flag
+$19AF,X [2 bytes] - player grow/shrink timer
+$19B1,X [2 bytes] - player next size (when growing/shrinking)
 $19B3,X [2 bytes] - player flashing timer
+$19B5,X [2 bytes] - player pressed a button (used for flashing timer)
 $19BC - number of enemies killed this round
-$19C0 - timer for swapping player positions
-$19D7,X [8 bytes] - animation timer for particles
-$19E0,X [8 bytes] - animation frame for particles
-$19E9,X [8 bytes] - particle id
+$19C0 - timer for swapping player positions/sizes
+$19C5,X [9 bytes] - particle x position
+$19CE,X [9 bytes] - particle y position
+$19D7,X [9 bytes] - animation timer for particles
+$19E0,X [9 bytes] - animation frame for particles
+$19E9,X [9 bytes] - particle id
 	0 - skid smoke
 	1 - yellow bump star
 
@@ -185,6 +195,7 @@ $20FB3A - ExecutePtrLong routine
 $20FB5E - controller update routine for all of smb3
 $22E0A9 - clears out oam by setting all object coords offscreen
 $22E103 - updates a 80-bit long rolling buffer
+$23DF67 - updates the controller registers regarding the currently selected button config
 $25F805 - ticks the RNG
 
 $26CAFC - prepare drawing player's level cards

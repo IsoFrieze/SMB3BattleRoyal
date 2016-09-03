@@ -47,6 +47,8 @@ ORG $35E000
 ; map16
 ORG $219C79
 		incbin "scoreboard_map16.bin"
+ORG $21A179
+		db $0E,$19,$0E,$19,$0F,$19,$0F,$19
 
 ; hijacks
 ORG $20F65C
@@ -81,7 +83,15 @@ ORG $26CC75
 ORG $26F688
 		JSL flash_scoreboard
 		RTS
+ORG $26CEAC
+		JSL merge_controls
+ORG $26CEB8
+		JSL disable_controls
+	;	LDX #$01
+ORG $26CEC1
+		JSL decrement_death_timers
+		JMP $CEEE
 
-ORG $20A2D0
-	;	JSL _ENTRY
-	;	JML $0080DE
+		
+ORG $26D217
+	;	RTS
