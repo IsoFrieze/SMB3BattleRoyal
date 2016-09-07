@@ -13,6 +13,7 @@ $0036 - long pointer to stripe image
 
 $0075 - 0 = init game, 1 = run like normal
 $0076 - pause flag
+$00A9 - timer for spawning enemies
 
 $0200 - w12sel
 $0201 - w34sel

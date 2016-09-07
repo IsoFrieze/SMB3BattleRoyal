@@ -1,0 +1,252 @@
+; remaps.asm
+; remapping tables related to players so that they are 4 bytes long
+
+; todo: main player routine, draw player, 26d4e3
+
+ORG $26CEF1
+		STZ !player_y_offset,X
+ORG $26CF0C
+		LDA !player_sprite_lock,X
+ORG $26CF11
+		DEC !player_sprite_lock,X
+ORG $26CF19
+		LDA !player_status,X
+ORG $26CF90
+		LDA !player_status,X
+ORG $26CF9F
+		LDA !player_status
+ORG $26CFBA
+		LDA !player_status,X
+ORG $26CFCA
+		LDA !player_y_offset,X
+ORG $26CFCF
+		LDA !player_y_position_low,X
+ORG $26CFD5
+		ADC !player_y_offset,X
+		STA !player_y_position_low,X
+ORG $26CFE0
+		LDA !player_status,X ; here
+
+ORG $26D224
+		LDA !player_direction_interaction,X
+ORG $26D22B
+		LDA !player_animation_frame,X
+ORG $26D23F
+		STA !player_animation_frame,X
+		LDA !player_size,X
+ORG $26D248
+		STA !player_animation_frame,X
+ORG $26D253
+		LDA !player_size,X
+ORG $26D25A
+		LDA !player_x_speed,X
+ORG $26D25F
+		STA !player_animation_timer,X
+ORG $26D26D
+		CMP !player_direction,X
+ORG $26D280
+		LDA !player_x_speed,X
+ORG $26D28B
+		LDA !player_walking_fraction_bits,X
+ORG $26D292
+		STA !player_walking_fraction_bits,X
+ORG $26D29F
+		INC !player_walking_frame,X
+		LDA !player_walking_frame,X
+ORG $26D2A6
+		LDA !player_size,X
+ORG $26D2B2
+		STZ !player_walking_frame,X
+ORG $26D2CC
+		STZ !player_walking_frame,X
+ORG $26D2D9
+		LDA !player_changing_size,X
+ORG $26D2E3
+		LDA !player_next_size,X
+		STA !player_size,X
+ORG $26D2ED
+		STA !player_flashing_timer,X
+		STA !player_pressed_button,X
+ORG $26D2FC
+		LDA !player_next_size,X
+ORG $26D314
+		DEC !player_changing_size,X
+ORG $26D319
+		LDA !player_direction_interaction,X
+ORG $26D320
+		LDA !player_jumped,X
+ORG $26D327
+		LDA !player_size,X
+ORG $26D32F
+		LDA !player_walking_frame,X
+ORG $26D340
+		LDA !player_size,X
+ORG $26D34D
+		LDA !player_squished_timer,X
+ORG $26D352
+		DEC !player_squished_timer,X
+ORG $26D357
+		LDA !player_size,X
+ORG $26D360
+		LDA !player_kicking_timer,X
+ORG $26D365
+		DEC !player_kicking_timer,X
+ORG $26D36A
+		LDA !player_size,X
+ORG $26D373
+		LDA !player_ducking,X
+ORG $26D37D
+		STA !player_animation_frame,X
+ORG $26D398
+		LDA !player_x_position,X
+ORG $26D3A1
+		LDA !player_y_position_low,X
+ORG $26D3AF
+		LDA !player_size,X
+ORG $26D3B6
+		STA !player_animation_frame,X
+ORG $26D3C2
+		LDA !player_flashing_timer,X
+ORG $26D3C7
+		LDA !player_pressed_button,X
+ORG $26D3CC
+		LDA !controller_byetudlr_hold,X
+ORG $26D3D2
+		STZ !player_pressed_button,X
+ORG $26D3DA
+		DEC !player_flashing_timer,X
+		LDA !player_flashing_timer,X
+ORG $26D027
+		LDA !player_direction_interaction,X
+ORG $26D02E
+		STZ !player_ducking,X
+		LDA !player_interaction_disabled,X
+ORG $26D036
+		LDA !controller_byetudlr_hold,X
+ORG $26D03C
+		BIT !player_direction_interaction,X
+ORG $26D041
+		LDA !player_below_tile,X
+ORG $26D048
+		STZ !player_x_speed,X
+		STZ !player_y_speed,X
+ORG $26D050
+		STA !player_status,X
+		LDA !player_flashing_timer,X
+ORG $26D058
+		LDA !player_pressed_button,X
+ORG $26D05D
+		LDA !controller_byetudlr_hold,X
+ORG $26D06B
+		DEC !player_flashing_timer,X
+		LDA !player_flashing_timer,X
+ORG $26D085
+		LDA !player_size,X
+ORG $26D08C
+		STA !player_ducking,X
+		STZ !player_y_speed,X
+		STZ !controller_byetudlr_hold,X
+ORG $26D094
+		JSL is_anyone_growing_or_shrinking
+ORG $26D09C
+		LDA !controller_byetudlr_hold,X
+ORG $26D0A0
+		STZ !player_invinsible,X
+		LDA !player_squished_timer,X
+ORG $26D0AF
+		STZ !controller_byetudlr_hold,X
+		STZ !controller_byetudlr_frame,X
+		LDA !player_size,X
+ORG $26D0B7
+		LDA !controller_byetudlr_hold,X
+ORG $26D0BD
+		STA !player_direction,X
+ORG $26D0C3
+		LDA !controller_byetudlr_hold,X
+ORG $26D0C9
+		LDA !player_x_speed,X
+ORG $26D0D5
+		LDA !player_x_speed,X
+ORG $26D0E9
+		LDA !controller_byetudlr_hold,X
+ORG $26D0EF
+		LDA !player_x_speed,X
+ORG $26D0FB
+		LDA !player_x_speed,X
+ORG $26D10A
+		STA !player_x_speed,X
+		LDA !player_direction_interaction,X
+ORG $26D114
+		LDA !player_y_speed,X
+ORG $26D11C
+		LDA !player_y_position_low,X
+ORG $26D122
+		ADC !player_y_offset,X
+		STA !player_y_position_low,X
+		STZ !player_y_speed,X
+		STZ !player_jumped,X
+		LDY !player_walking_on_tile,X
+ORG $26D135
+		STZ !player_pressed_button,X
+		LDA !player_direction_interaction,X
+ORG $26D14A
+		STA !player_x_speed,X
+ORG $26D151
+		LDA !player_x_position,X
+ORG $26D161
+		STZ !player_pressed_button,X
+ORG $26D166
+		STA !player_squished_timer,X
+ORG $26D173
+		LDA !controller_byetudlr_frame,X
+ORG $26D177
+		LDA !controller_byetudlr_hold,X
+ORG $26D17D
+		STA !player_ducking,X
+ORG $26D185
+		STA !player_jumped,X
+		LDA !player_x_speed,X
+ORG $26D196
+		STA !player_y_speed,X
+		LDA !controller_byetudlr_hold,X
+ORG $26D19F
+		LDA !player_x_speed,X
+ORG $26D1A7
+		STA !player_x_speed,X
+ORG $26D1AD
+		STA !player_x_speed,X
+ORG $26D1B3
+		LDA !player_frozen_vertically_timer,X
+ORG $26D1B8
+		DEC !player_frozen_vertically_timer,X
+ORG $26D1BD
+		LDY !player_y_speed,X
+ORG $26D1C2
+		LDA !player_direction_interaction,X
+ORG $26D1D1
+		STA !player_frozen_vertically_timer,X
+		STZ !player_y_speed,X
+ORG $26D1DB
+		LDA !player_size,X
+ORG $26D1E0
+		LDA !player_ducking,X
+ORG $26D1E9
+		LDA !player_y_position_low,X
+ORG $26D1F1
+		STA !player_y_position_low,X
+ORG $26D1FC
+		LDA !player_y_speed,X
+ORG $26D205
+		LDA !player_y_speed,X
+ORG $26D20A
+		LDY !controller_byetudlr_hold,X
+ORG $26D213
+		STA !player_y_speed,X
+ORG $26E93C
+		LDA #$03
+ORG $26E942	
+		LDA !player_status,X
+ORG $26E949
+		LDA !player_invinsible,X
+ORG $26E951
+		LDA !player_y_position_high,X
