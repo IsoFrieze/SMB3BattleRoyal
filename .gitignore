@@ -1,3 +1,2 @@
-asar.exe
-patched.smc
-SMAS.smc
+*.exe
+*.smc
